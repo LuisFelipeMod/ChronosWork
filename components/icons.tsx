@@ -11,8 +11,9 @@ export const Logo: React.FC<IconSvgProps> = ({
   <svg
     width="112"
     height="35"
+    className="logo"
     viewBox="0 0 112 35"
-    fill="hsl(var(--nextui-foreground))"
+    fill=""
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
