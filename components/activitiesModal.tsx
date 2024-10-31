@@ -22,11 +22,6 @@ interface Data {
 export default function ActivitiesModal(data: Data) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const customers = data.data.customers;
-  let counter = 0;
-
-  customers?.map((e) => {
-    console.log(e);
-  });
 
   return (
     <div className="flex gap-3">
