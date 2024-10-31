@@ -26,7 +26,7 @@ export default function ActivitiesModal(data: Data) {
   return (
     <div className="flex gap-3">
       <Button onPress={onOpen} color="primary">
-        Open Modal
+        Clique aqui
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
