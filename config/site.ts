@@ -10,7 +10,7 @@ export const siteConfig = {
     },
     {
       label: "Relatório",
-      href: "/relatorio",
+      href: "/report",
     },
   ],
   navMenuItems: [
