@@ -1,89 +1,55 @@
-"use client";
-
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-  Checkbox,
-  Input,
-  Link,
-} from "@nextui-org/react";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
+'use client';
+import { FormEventHandler, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { DOMAttributes } from '@nextui-org/system';
 
 export default function Login() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleLogin = async (e:DOMAttributes<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ method: "PUT", username, password }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', data.username);
+      router.push('/');
+    } else {
+      alert('Credenciais inválidas');
+    }
+  };
 
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-xl text-center justify-center">
-        <span className={title()}>Registre</span>
-        <span className={title({ color: "blue" })}> suas atividades</span>
-        <br />
-        <span className={title()}>aqui</span>
-      </div>
+    <form className='flex flex-col justify-center items-center' onSubmit={handleLogin}>
+      <h1 className='text-white text-2xl mb-5'>
+        Login
+      </h1>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Usuário"
+        className='rounded m-2 h-10 p-2 w-6/12'
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Senha"
+        className='rounded m-2 h-10 p-2 w-6/12'
 
-      <div className="flex gap-3">
-        <Button onPress={onOpen} color="primary">
-          Open Modal
-        </Button>
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          placement="top-center"
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Log in
-                </ModalHeader>
-                <ModalBody>
-                  <Input
-                    autoFocus
-
-                    label="Email"
-                    placeholder="Enter your email"
-                    variant="bordered"
-                  />
-                  <Input
-                    label="Password"
-                    placeholder="Enter your password"
-                    type="password"
-                    variant="bordered"
-                  />
-                  <div className="flex py-2 px-1 justify-between">
-                    <Checkbox
-                      classNames={{
-                        label: "text-small",
-                      }}
-                    >
-                      Remember me
-                    </Checkbox>
-                    <Link color="primary" href="#" size="sm">
-                      Forgot password?
-                    </Link>
-                  </div>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="flat" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button color="primary" onPress={onClose}>
-                    Sign in
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </div>
-    </section>
+      />
+      <button type="submit" className='mt-1 bg-white pt-2 pb-2 pl-5 pr-5 rounded text-black'>Login</button>
+    </form>
   );
 }
