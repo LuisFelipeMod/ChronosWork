@@ -1,4 +1,4 @@
-# EfiTimer
+# ChronosWork
 
 ## Inicializando o projeto localmente:
 

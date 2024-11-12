@@ -89,14 +89,14 @@ export default function ActivitiesModal() {
 
   return (
     <div className="flex gap-3">
-      <Button onPress={onOpen} color="primary">
+      <Button onPress={onOpen} color="primary" className="text-secondaryLight">
         Clique aqui
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 text-secondaryLight">
                 Iniciar contador de atividade
               </ModalHeader>
               <ModalBody>
@@ -127,7 +127,7 @@ export default function ActivitiesModal() {
               </ModalBody>
               <ModalFooter>
                 {!isStarted ? (
-                  <Button color="primary" onPress={() => handleButtonClick(selectedActivity, activityDescription)}>
+                  <Button color="primary" className="text-secondaryLight" onPress={() => handleButtonClick(selectedActivity, activityDescription)}>
                     Iniciar
                   </Button>
                 ) : (
