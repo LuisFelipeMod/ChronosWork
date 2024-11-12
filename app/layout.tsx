@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang="pt-br">
       <head />
       <body
         className={clsx(
@@ -54,8 +54,6 @@ export default function RootLayout({
                 href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
                 title="nextui.org homepage"
               >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">NextUI</p>
               </Link>
             </footer>
           </div>

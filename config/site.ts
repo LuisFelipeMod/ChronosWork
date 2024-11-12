@@ -1,28 +1,16 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "EfiTimer",
+  description: "Tornando a experiência de registrar atividades mais agradável",
   navItems: [
     {
-      label: "Home",
+      label: "Atividades",
       href: "/",
     },
     {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
+      label: "Relatório",
+      href: "/report",
     },
   ],
   navMenuItems: [
