@@ -35,3 +35,34 @@ section[role="dialog"] button[aria-label="Close"]{
 section[role="dialog"] button[aria-label="Close"]:hover{
   background-color: hsl(240deg 85.71% 86.78%);
 }
+
+.time-display{
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  font-size: 0.9em;
+  color: #0000;
+  transition: .444s all;
+}
+
+.time-display.started{
+  color: #f31260;
+}
+
+.time-display.stoped{
+  color: #17c964;
+}
+.time-display svg{
+  stroke: #f31260;
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes spinner{
+  from {transform: rotate(0deg)}
+  to {transform: rotate(360deg)}
+}
+
+.actionBtn svg{
+  animation: spinner 2s infinite;
+}
