@@ -2,6 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+:root{
+  --secondary-color: #fff;
+
+}
+
 .logo path{
   fill: hsl(var(--nextui-foreground));
+}
+
+header{
+  background: #2627D9;
+  padding: 0.3rem 0;
+  border-radius: 0 0 30px 30px;
+  height: 4.2rem;
+  box-shadow: 0px 20px 20px 0px rgba(0,0,0,0.1);
+}
+
+header > ul{
+  flex-grow: 0.96;
+}
+
+section[role="dialog"] button[aria-label="Close"] > svg{
+  stroke: #fff;
+}
+
+section[role="dialog"] button[aria-label="Close"]{
+  transition: .333s ease-in-out;
+  background-color: #0000;
+  margin: 0.5rem 0.5rem 0 0;
+}
+section[role="dialog"] button[aria-label="Close"]:hover{
+  background-color: hsl(240deg 85.71% 86.78%);
+}
+
+.time-display{
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  font-size: 0.9em;
+  color: #0000;
+  transition: .444s all;
+}
+
+.time-display.started{
+  color: #f31260;
+}
+
+.time-display.stoped{
+  color: #17c964;
+}
+.time-display svg{
+  stroke: #f31260;
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes spinner{
+  from {transform: rotate(0deg)}
+  to {transform: rotate(360deg)}
+}
+
+.actionBtn svg{
+  animation: spinner 2s infinite;
 }
