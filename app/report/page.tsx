@@ -49,10 +49,10 @@ export default function Report() {
       <Table aria-label="Tabela de atividades">
         <TableHeader>
           <TableColumn key="date">Data</TableColumn>
-          <TableColumn key="start">Horario Inicial</TableColumn>
-          <TableColumn key="final">Horario Final</TableColumn>
+          <TableColumn key="start">Horário Inicial</TableColumn>
+          <TableColumn key="final">Horário Final</TableColumn>
           <TableColumn key="customers">Clientes</TableColumn>
-          <TableColumn key="activity">Descricao da Atividade</TableColumn>
+          <TableColumn key="activity">Descrição da Atividade</TableColumn>
         </TableHeader>
         <TableBody>
           {start.map((_, index) => (
