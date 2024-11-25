@@ -11,17 +11,6 @@
   fill: hsl(var(--nextui-foreground));
 }
 
-header{
-  background: #2627D9;
-  padding: 0.3rem 0;
-  border-radius: 0 0 30px 30px;
-  height: 4.2rem;
-  box-shadow: 0px 20px 20px 0px rgba(0,0,0,0.1);
-}
-
-header > ul{
-  flex-grow: 0.96;
-}
 
 section[role="dialog"] button[aria-label="Close"] > svg{
   stroke: #fff;
