@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "EfiTimer",
+  name: "ChronosWork",
   description: "Tornando a experiência de registrar atividades mais agradável",
   navItems: [
     {
