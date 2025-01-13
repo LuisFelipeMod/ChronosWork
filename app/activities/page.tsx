@@ -16,7 +16,7 @@ export default async function Home() {
           <span className={title()}>aqui</span>
         </div>
 
-        <ActivitiesModal/>
+        <ActivitiesModal btnLabel="Clique aqui"/>
       </section>
     </ProtectedPage>
   );

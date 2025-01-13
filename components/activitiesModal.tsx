@@ -59,7 +59,7 @@ async function handleStartStop(
   setNextCell(user, "C", getHours());
 }
 
-export default function ActivitiesModal() {
+export default function ActivitiesModal(props:any) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const [selectedActivity, setSelectedActivity] = useState("");
@@ -69,6 +69,7 @@ export default function ActivitiesModal() {
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(["", "texto"]);
 
+  const btnLabel = props.btnLabel;
 
   useEffect(() => {
     fetchSheets("GET", `Clientes!A:A`, "")
@@ -125,7 +126,7 @@ export default function ActivitiesModal() {
   return (
     <div className="flex gap-3">
       <Button onPress={!loading ? onOpen : undefined} color="primary" className="text-secondaryLight actionBtn">
-        {loading ? <LoaderCircle/> : "Clique aqui"}
+        {loading ? <LoaderCircle className="loaderCircle"/> : btnLabel}
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
@@ -174,7 +175,6 @@ export default function ActivitiesModal() {
                     onPress={() =>
                       handleButtonClick(selectedActivity, activityDescription)
                     }
-                    isDisabled={selectedActivity==="" || activityDescription===""} 
                   >
                     Iniciar
                   </Button>

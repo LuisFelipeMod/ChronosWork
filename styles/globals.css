@@ -52,6 +52,6 @@ section[role="dialog"] button[aria-label="Close"]:hover{
   to {transform: rotate(360deg)}
 }
 
-.actionBtn svg{
+.actionBtn .loaderCircle{
   animation: spinner 2s infinite;
 }
