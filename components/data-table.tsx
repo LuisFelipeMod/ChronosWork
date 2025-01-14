@@ -154,7 +154,6 @@ export const columns = [
   { name: "Horário Final", uid: "data_final", sortable: true },
   { name: "Clientes", uid: "clientes", sortable: true },
   { name: "Descrição da Atividade", uid: "atividade" },
-  { name: "", uid: "actions" },
 ];
 
 type Data = {
@@ -296,18 +295,18 @@ export default function DataTable() {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((data: User, columnKey: React.Key) => {
-    const cellValue = data[columnKey as keyof User];
+  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
+    const cellValue = user[columnKey as keyof User];
 
     switch (columnKey) {
       case "name":
         return (
           <User
-            avatarProps={{ radius: "lg", src: data.avatar }}
-            description={data.email}
+            avatarProps={{ radius: "lg", src: user.avatar }}
+            description={user.email}
             name={cellValue}
           >
-            {data.email}
+            {user.email}
           </User>
         );
       case "role":
@@ -315,7 +314,7 @@ export default function DataTable() {
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
             <p className="text-bold text-tiny capitalize text-default-400">
-              {data.team}
+              {user.team}
             </p>
           </div>
         );
