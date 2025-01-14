@@ -113,14 +113,6 @@ export default function ActivitiesModal(props:any) {
       ? setTime(["started", getHours()])
       : setTime(["stoped", getHours()]);
   };
-
-  useEffect(() => {
-    console.log("selectedActivity atualizado:", selectedActivity);
-  }, [selectedActivity]);
-  
-  useEffect(() => {
-    console.log("activityDescription atualizado:", activityDescription);
-  }, [activityDescription]);
   
 
   return (

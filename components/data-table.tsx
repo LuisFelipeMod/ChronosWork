@@ -178,15 +178,16 @@ const INITIAL_VISIBLE_COLUMNS = [
 type User = any;
 
 export default function DataTable() {
-  const user = localStorage.getItem("user");
   const [date, setDate] = useState([""]);
   const [start, setStart] = useState([""]);
   const [final, setFinal] = useState([""]);
   const [customers, setCustomers] = useState([""]);
   const [activity, setActivity] = useState([""]);
   const [tableData, setTableData] = useState<Data>([]);
-
+  
   useEffect(() => {
+    const user = localStorage.getItem("user");
+
     fetchSheets("GET", `${user}!A:A`, "").then((response) => {
       const data = response.data;
       setDate(data.slice(-31));
@@ -508,7 +509,7 @@ export default function DataTable() {
         )}
       </TableHeader>
       <TableBody
-        emptyContent={"Não foi encontrada nenhuma atividade..."}
+        emptyContent={"Carregando..."}
         items={sortedItems}
       >
         {(item: any) => (
