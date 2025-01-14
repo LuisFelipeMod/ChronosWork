@@ -1,6 +1,5 @@
 "use client";
 
-import { fetchSheets } from "@/components/fetch-sheets";
 import ProtectedPage from "@/components/protected-page";
 import {
   Table,

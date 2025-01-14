@@ -22,7 +22,7 @@ import {
   SortDescriptor,
 } from "@nextui-org/react";
 
-import { fetchSheets } from "@/components/fetchSheets";
+import { fetchSheets } from "@/components/fetch-sheets";
 import { table } from "console";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
