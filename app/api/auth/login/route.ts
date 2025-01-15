@@ -5,7 +5,13 @@ import { google } from "googleapis";
 const SECRET_KEY = process.env.SECRET_KEY || "sua-chave-secreta";
 
 async function getUsers() {
+  const credentials = {
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_PRIVATE_KEY,
+  };
+
   const auth = await google.auth.getClient({
+    credentials,
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
   const sheets = google.sheets({ version: "v4", auth });
@@ -30,7 +36,7 @@ export async function POST(req: NextRequest) {
 
   if (user) {
     const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
-    return new Response(JSON.stringify({ token, username } ), { status: 200 });
+    return new Response(JSON.stringify({ token, username }), { status: 200 });
   } else {
     return new Response("Credenciais inválidas", { status: 401 });
   }

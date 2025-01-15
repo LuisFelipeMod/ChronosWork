@@ -2,7 +2,6 @@ import { title, subtitle } from "@/components/primitives";
 import ActivitiesModal from "@/components/activities-modal";
 import ProtectedPage from "@/components/protected-page";
 
-import { google } from "googleapis";
 import next from "next";
 
 export default async function Home() {
