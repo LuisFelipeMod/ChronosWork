@@ -11,6 +11,8 @@ import {
   Autocomplete,
   AutocompleteItem,
   Textarea,
+  DateInput,
+  TimeInput,
 } from "@nextui-org/react";
 
 import { useState, useEffect } from "react";
@@ -18,50 +20,61 @@ import { useState, useEffect } from "react";
 import { fetchSheets, setNextCell } from "./fetch-sheets";
 import { LoaderCircle, MousePointer2 } from "lucide-react";
 
+import { parseAbsoluteToLocal, Time } from "@internationalized/date";
+import { I18nProvider } from "@react-aria/i18n";
+
 interface Data {
   data: {
     customers: string[][] | null | undefined;
   };
 }
 
-async function handleStartStop(
-  isStarted: any,
+async function addNewRow(
+  date: any,
+  initialHours: any,
+  finalHours: any,
   selectedActivity: any,
   activityDescription: any
 ) {
-  const getDate = () => {
-    const now = new Date();
-    const date = now.toLocaleDateString();
-
-    return date;
-  };
-
-  const getHours = () => {
-    const now = new Date();
-
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-
-    return `${hours}:${minutes}`;
-  };
-
   const user = String(localStorage.getItem("user"));
 
-  if (!isStarted && user) {
-    setNextCell(user, "A", getDate());
-    setNextCell(user, "B", getHours());
+  const getDate = (date: any) => {
+    const formattedDate = String(date.day + "/" + date.month + "/" + date.year);
+
+    return formattedDate;
+  };
+
+  const getHours = (hours: any) => {
+    const hour = String(hours.hour).padStart(2, "0");
+    const minute = String(hours.minute).padStart(2, "0");
+    const formatedHours = `${hour}:${minute}`;
+
+    return formatedHours;
+  };
+
+  if (user) {
+    setNextCell(user, "A", getDate(date));
+    setNextCell(user, "B", getHours(initialHours));
+    setNextCell(user, "C", getHours(finalHours));
     setNextCell(user, "D", selectedActivity);
     setNextCell(user, "E", activityDescription);
     setNextCell(user, "F", user);
+
     return;
   }
-
-  setNextCell(user, "C", getHours());
 }
 
-export default function ActivitiesModal(props:any) {
+export default function ActivitiesModalManual(props: any) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  const [date, setDate] = useState(
+    parseAbsoluteToLocal("2025-01-01T12:00:00Z")
+  );
+  const [initialHours, setInitialHours] = useState(
+    parseAbsoluteToLocal("2025-01-01T12:00:00Z")
+  );
+  const [finalHours, setFinalHours] = useState(
+    parseAbsoluteToLocal("2025-01-01T12:00:00Z")
+  );
   const [selectedActivity, setSelectedActivity] = useState("");
   const [activityDescription, setActivityDescription] = useState("");
   const [isStarted, setIsStarted] = useState(false);
@@ -94,46 +107,54 @@ export default function ActivitiesModal(props:any) {
     localStorage.setItem("isStarted", JSON.stringify(isStarted));
   }, [isStarted]);
 
-  const handleButtonClick = (
-    selectedActivity: string,
-    activityDescription: string
-  ) => {
-    const getHours = () => {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, "0");
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-
-      return `${hours}:${minutes}`;
-    };
-
-    handleStartStop(isStarted, selectedActivity, activityDescription);
-    setIsStarted(!isStarted);
-
-    !isStarted
-      ? setTime(["started", getHours()])
-      : setTime(["stoped", getHours()]);
-  };
-  
-
   return (
     <div className="flex gap-3">
-      <Button onPress={!loading ? onOpen : undefined} color="primary" className="text-secondaryLight actionBtn">
-        {loading ? <LoaderCircle className="loaderCircle"/> : btnLabel}
+      <Button
+        onPress={!loading ? onOpen : undefined}
+        color="primary"
+        className="text-secondaryLight actionBtn"
+      >
+        {loading ? <LoaderCircle className="loaderCircle" /> : btnLabel}
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-secondaryLight">
-                Iniciar Contador de Atividade
+                Cadastrar atividade manualmente
               </ModalHeader>
               <ModalBody>
+                <div className="flex flex-col gap-4">
+                  <I18nProvider locale="pt-br">
+                    <DateInput
+                      isRequired
+                      label="Data"
+                      granularity="day"
+                      value={date}
+                      onChange={setDate}
+                    />
+                  </I18nProvider>
+                </div>
+                <TimeInput
+                  isRequired
+                  hideTimeZone
+                  hourCycle={24}
+                  label="Horário Inicial"
+                  value={initialHours}
+                  onChange={setInitialHours}
+                />
+                <TimeInput
+                  isRequired
+                  hideTimeZone
+                  hourCycle={24}
+                  label="Horário Final"
+                  value={finalHours}
+                  onChange={setFinalHours}
+                />
                 <Autocomplete
                   isRequired
                   isDisabled={isStarted ? true : false}
-                  onInputChange={(e:string) =>
-                    setSelectedActivity(e)
-                  }
+                  onInputChange={(e: string) => setSelectedActivity(e)}
                   label="Atividade/Projeto"
                 >
                   {customers ? (
@@ -152,34 +173,29 @@ export default function ActivitiesModal(props:any) {
                   isRequired
                   label="Descrição da atividade"
                   onChange={(e: any) => {
-                    setActivityDescription(String(e.target.value))
-                  }
-                  }
+                    setActivityDescription(String(e.target.value));
+                  }}
                   placeholder="Escreva a descrição"
                 />
               </ModalBody>
               <ModalFooter>
                 <div className={`time-display ${time[0]}`}>{time[1]}</div>
-                {!isStarted ? (
-                  <Button
-                    color="primary"
-                    className="text-secondaryLight"
-                    onPress={() =>
-                      handleButtonClick(selectedActivity, activityDescription)
-                    }
-                  >
-                    Iniciar
-                  </Button>
-                ) : (
-                  <Button
-                    color="danger"
-                    onPress={() =>
-                      handleButtonClick(selectedActivity, activityDescription)
-                    }
-                  >
-                    Parar
-                  </Button>
-                )}
+                <Button
+                  color="primary"
+                  className="text-secondaryLight"
+                  onPressStart={() =>
+                    addNewRow(
+                      date,
+                      initialHours,
+                      finalHours,
+                      selectedActivity,
+                      activityDescription
+                    )
+                  }
+                  onPressEnd={onClose}
+                >
+                  Cadastrar
+                </Button>
               </ModalFooter>
             </>
           )}

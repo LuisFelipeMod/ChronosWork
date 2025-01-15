@@ -24,8 +24,7 @@ import {
 
 import { fetchSheets } from "@/components/fetch-sheets";
 import { table } from "console";
-import ActivitiesModal from "@/components/activities-modal";
-
+import ActivitiesModalManual from "@/components/activities-modal-manual";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
@@ -150,8 +149,8 @@ export const ChevronDownIcon = ({
 
 export const columns = [
   { name: "Data", uid: "data", sortable: true },
-  { name: "Horário Inicial", uid: "data_inicial", sortable: true },
-  { name: "Horário Final", uid: "data_final", sortable: true },
+  { name: "Horário Inicial", uid: "horario_inicial" },
+  { name: "Horário Final", uid: "horario_final" },
   { name: "Clientes", uid: "clientes", sortable: true },
   { name: "Descrição da Atividade", uid: "atividade" },
 ];
@@ -159,8 +158,8 @@ export const columns = [
 type Data = {
   id: any;
   data: any;
-  data_inicial: any;
-  data_final: any;
+  horario_inicial: any;
+  horario_final: any;
   clientes: any;
   atividade: any;
 }[];
@@ -169,8 +168,8 @@ const data: Data = [];
 
 const INITIAL_VISIBLE_COLUMNS = [
   "data",
-  "data_inicial",
-  "data_final",
+  "horario_inicial",
+  "horario_final",
   "clientes",
   "atividade",
 ];
@@ -184,29 +183,29 @@ export default function DataTable() {
   const [customers, setCustomers] = useState([""]);
   const [activity, setActivity] = useState([""]);
   const [tableData, setTableData] = useState<Data>([]);
-  
+
   useEffect(() => {
     const user = localStorage.getItem("user");
 
     fetchSheets("GET", `${user}!A:A`, "").then((response) => {
       const data = response.data;
-      setDate(data.slice(-31));
+      setDate(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${user}!B:B`, "").then((response) => {
       const data = response.data;
-      setStart(data.slice(-31));
+      setStart(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${user}!C:C`, "").then((response) => {
       const data = response.data;
-      setFinal(data.slice(-31));
+      setFinal(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${user}!D:D`, "").then((response) => {
       const data = response.data;
-      setCustomers(data.slice(-31));
+      setCustomers(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${user}!E:E`, "").then((response) => {
       const data = response.data;
-      setActivity(data.slice(-31));
+      setActivity(data.slice(-31).reverse());
     });
   }, []);
 
@@ -223,8 +222,8 @@ export default function DataTable() {
           return {
             id: index,
             data: date[index][0],
-            data_inicial: start[index][0],
-            data_final: final[index][0],
+            horario_inicial: start[index][0],
+            horario_final: final[index][0],
             clientes: customers[index][0],
             atividade: activity[index][0],
           };
@@ -286,10 +285,25 @@ export default function DataTable() {
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
 
+  const parseDate = (dateStr: string) => {
+    const [day, month, year] = dateStr.split('/');
+    return new Date(`${year}-${month}-${day}`);
+  };
+
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as number;
-      const second = b[sortDescriptor.column as keyof User] as number;
+      const column = sortDescriptor.column as keyof User;
+      let first: number | Date = a[column];
+      let second: number | Date = b[column];
+
+      if (column === "data") {
+        first = parseDate(a[column] as string);
+        second = parseDate(b[column] as string);
+      } else {
+        first = a[column] as number;
+        second = b[column] as number;
+      }
+
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
@@ -418,7 +432,14 @@ export default function DataTable() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <ActivitiesModal btnLabel={(<>Adicionar novo<PlusIcon /></>)} />
+            <ActivitiesModalManual
+              btnLabel={
+                <>
+                  Adicionar novo
+                  <PlusIcon />
+                </>
+              }
+            />
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -508,10 +529,7 @@ export default function DataTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody
-        emptyContent={"Carregando..."}
-        items={sortedItems}
-      >
+      <TableBody emptyContent={"Carregando..."} items={sortedItems}>
         {(item: any) => (
           <TableRow key={item.id}>
             {(columnKey) => (
