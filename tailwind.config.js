@@ -1,7 +1,7 @@
 import { nextui } from "@nextui-org/theme";
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -30,7 +30,7 @@ module.exports = {
           colors: {
             primary: "#2627D9",
             background: "#F5F7FA",
-            foreground: "#333333"
+            foreground: "#333333",
           },
         },
         dark: {

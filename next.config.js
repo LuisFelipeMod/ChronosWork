@@ -1,10 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+};
 
 resolve: {
   fallback: {
-    fs: false
+    fs: false;
   }
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;

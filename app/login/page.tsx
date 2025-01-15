@@ -30,7 +30,7 @@ export default function Login() {
   };
 
   return (
-    <form className='flex flex-col justify-center items-center' onSubmit={handleLogin}>
+    <form className='flex flex-col w-full justify-center items-center' onSubmit={handleLogin}>
       <h1 className='text-white text-2xl mb-5'>
         Login
       </h1>
