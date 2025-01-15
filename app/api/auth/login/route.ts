@@ -6,8 +6,8 @@ const SECRET_KEY = process.env.SECRET_KEY || "sua-chave-secreta";
 
 async function getUsers() {
   const credentials = {
-    client_email: process.env.GOOGLE_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY?.split(String.raw`\n`).join('\n'),
+    client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
+    private_key: process.env.GCP_PRIVATE_KEY?.split(String.raw`\n`).join('\n'),
   };
 
   const auth = await google.auth.getClient({
@@ -17,7 +17,7 @@ async function getUsers() {
   const sheets = google.sheets({ version: "v4", auth });
 
   const response = await sheets.spreadsheets.values.get({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
+    spreadsheetId: process.env.GCP_SHEET_ID,
     range: "DevsLogin!A:B",
   });
 

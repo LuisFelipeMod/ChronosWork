@@ -11,8 +11,8 @@ interface Sheets {
 
 async function fetchSheet(method: string, range: string, valueToSet: any) {
   const credentials = {
-    client_email: process.env.GOOGLE_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY,
+    client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
+    private_key: process.env.GCP_PRIVATE_KEY,
   };
 
   const auth = await google.auth.getClient({
@@ -31,7 +31,7 @@ async function fetchSheet(method: string, range: string, valueToSet: any) {
 
 async function getSheet(sheets: Sheets, range: string) {
   const response = await sheets.spreadsheets.values.get({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
+    spreadsheetId: process.env.GCP_SHEET_ID,
     range,
   });
 
@@ -42,7 +42,7 @@ async function getSheet(sheets: Sheets, range: string) {
 
 async function setSheet(sheets: any, range: string, valueToSet: any) {
   const request = await sheets.spreadsheets.values.update({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
+    spreadsheetId: process.env.GCP_SHEET_ID,
     range,
     valueInputOption: `USER_ENTERED`,
     includeValuesInResponse: true,
