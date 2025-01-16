@@ -45,18 +45,20 @@ async function handleStartStop(
     return `${hours}:${minutes}`;
   };
 
-  const user = String(localStorage.getItem("user"));
+  const userStorage = localStorage.getItem("user");
+  const user = userStorage ? JSON.parse(userStorage) : null;
+  const username = user.username;
 
-  if (!isStarted && user) {
-    setNextCell(user, "A", getDate());
-    setNextCell(user, "B", getHours());
-    setNextCell(user, "D", selectedActivity);
-    setNextCell(user, "E", activityDescription);
-    setNextCell(user, "F", user);
+  if (!isStarted && username) {
+    setNextCell(username, "A", getDate());
+    setNextCell(username, "B", getHours());
+    setNextCell(username, "D", selectedActivity);
+    setNextCell(username, "E", activityDescription);
+    setNextCell(username, "F", username);
     return;
   }
 
-  setNextCell(user, "C", getHours());
+  setNextCell(username, "C", getHours());
 }
 
 export default function ActivitiesModal(props:any) {

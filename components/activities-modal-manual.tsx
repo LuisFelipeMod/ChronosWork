@@ -36,7 +36,9 @@ async function addNewRow(
   selectedActivity: any,
   activityDescription: any
 ) {
-  const user = String(localStorage.getItem("user"));
+  const userStorage = localStorage.getItem("user");
+  const user = userStorage ? JSON.parse(userStorage) : null;
+  const username = user.username;
 
   const getDate = (date: any) => {
     const formattedDate = String(date.day + "/" + date.month + "/" + date.year);
@@ -52,13 +54,13 @@ async function addNewRow(
     return formatedHours;
   };
 
-  if (user) {
-    setNextCell(user, "A", getDate(date));
-    setNextCell(user, "B", getHours(initialHours));
-    setNextCell(user, "C", getHours(finalHours));
-    setNextCell(user, "D", selectedActivity);
-    setNextCell(user, "E", activityDescription);
-    setNextCell(user, "F", user);
+  if (username) {
+    setNextCell(username, "A", getDate(date));
+    setNextCell(username, "B", getHours(initialHours));
+    setNextCell(username, "C", getHours(finalHours));
+    setNextCell(username, "D", selectedActivity);
+    setNextCell(username, "E", activityDescription);
+    setNextCell(username, "F", username);
 
     return;
   }

@@ -1,15 +1,18 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function ProtectedPage({ children }:any) {
+export default function ProtectedPage({ children }: any) {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const userStorage = localStorage.getItem("user");
+    const user = userStorage ? JSON.parse(userStorage) : null;
+    const token = user.token;
+    
     if (!token) {
-      router.push('/');
+      router.push("/");
     }
   }, [router]);
 

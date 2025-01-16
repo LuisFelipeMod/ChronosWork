@@ -182,7 +182,9 @@ const INITIAL_VISIBLE_COLUMNS = ["data", "data_inicial", "data_final", "clientes
 type User = any;
 
 export default function DataTable() {
-  const user = localStorage.getItem("user");
+  const userStorage = localStorage.getItem("user");
+  const user = userStorage ? JSON.parse(userStorage) : null;
+  const username = user.username;
   const [date, setDate] = useState([""]);
   const [start, setStart] = useState([""]);
   const [final, setFinal] = useState([""]);
@@ -192,23 +194,23 @@ export default function DataTable() {
 
   
   useEffect(() => {
-    fetchSheets("GET", `${user}!A:A`, "").then((response) => {
+    fetchSheets("GET", `${username}!A:A`, "").then((response) => {
       const data = response.data;
       setDate(data.slice(-10));
     });
-    fetchSheets("GET", `${user}!B:B`, "").then((response) => {
+    fetchSheets("GET", `${username}!B:B`, "").then((response) => {
       const data = response.data;
       setStart(data.slice(-10));
     });
-    fetchSheets("GET", `${user}!C:C`, "").then((response) => {
+    fetchSheets("GET", `${username}!C:C`, "").then((response) => {
       const data = response.data;
       setFinal(data.slice(-10));
     });
-    fetchSheets("GET", `${user}!D:D`, "").then((response) => {
+    fetchSheets("GET", `${username}!D:D`, "").then((response) => {
       const data = response.data;
       setCustomers(data.slice(-10));
     });
-    fetchSheets("GET", `${user}!E:E`, "").then((response) => {
+    fetchSheets("GET", `${username}!E:E`, "").then((response) => {
       const data = response.data;
       setActivity(data.slice(-10));
     });

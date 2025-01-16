@@ -22,7 +22,7 @@ export default function Login() {
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', data.username);
+      localStorage.setItem('user', JSON.stringify(data));
       router.push('/');
     } else {
       alert('Credenciais inválidas');

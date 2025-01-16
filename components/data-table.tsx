@@ -185,28 +185,33 @@ export default function DataTable() {
   const [tableData, setTableData] = useState<Data>([]);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
+    const userStorage = localStorage.getItem("user");
 
-    fetchSheets("GET", `${user}!A:A`, "").then((response) => {
-      const data = response.data;
-      setDate(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${user}!B:B`, "").then((response) => {
-      const data = response.data;
-      setStart(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${user}!C:C`, "").then((response) => {
-      const data = response.data;
-      setFinal(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${user}!D:D`, "").then((response) => {
-      const data = response.data;
-      setCustomers(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${user}!E:E`, "").then((response) => {
-      const data = response.data;
-      setActivity(data.slice(-31).reverse());
-    });
+    if (userStorage) {
+      const user = JSON.parse(userStorage);
+      const username = user.username;
+
+      fetchSheets("GET", `${username}!A:A`, "").then((response) => {
+        const data = response.data;
+        setDate(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!B:B`, "").then((response) => {
+        const data = response.data;
+        setStart(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!C:C`, "").then((response) => {
+        const data = response.data;
+        setFinal(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!D:D`, "").then((response) => {
+        const data = response.data;
+        setCustomers(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!E:E`, "").then((response) => {
+        const data = response.data;
+        setActivity(data.slice(-31).reverse());
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -286,7 +291,7 @@ export default function DataTable() {
   }, [page, filteredItems, rowsPerPage]);
 
   const parseDate = (dateStr: string) => {
-    const [day, month, year] = dateStr.split('/');
+    const [day, month, year] = dateStr.split("/");
     return new Date(`${year}-${month}-${day}`);
   };
 
