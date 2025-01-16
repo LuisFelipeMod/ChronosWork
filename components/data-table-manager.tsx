@@ -24,6 +24,8 @@ import {
 
 import { fetchSheets } from "@/components/fetch-sheets";
 import { table } from "console";
+import ActivitiesModalManual from "@/components/activities-modal-manual";
+import { useRouter } from "next/navigation";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
@@ -32,6 +34,31 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
+
+export const VerticalDotsIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height={size || height}
+      role="presentation"
+      viewBox="0 0 24 24"
+      width={size || width}
+      {...props}
+    >
+      <path
+        d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
 
 export const PlusIcon = ({
   size = 24,
@@ -60,31 +87,6 @@ export const PlusIcon = ({
         <path d="M6 12h12" />
         <path d="M12 18V6" />
       </g>
-    </svg>
-  );
-};
-
-export const VerticalDotsIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height={size || height}
-      role="presentation"
-      viewBox="0 0 24 24"
-      width={size || width}
-      {...props}
-    >
-      <path
-        d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-        fill="currentColor"
-      />
     </svg>
   );
 };
@@ -148,43 +150,34 @@ export const ChevronDownIcon = ({
 
 export const columns = [
   { name: "Data", uid: "data", sortable: true },
-  { name: "Horário Inicial", uid: "data_inicial", sortable: true },
-  { name: "Horário Final", uid: "data_final", sortable: true },
+  { name: "Horário Inicial", uid: "horario_inicial" },
+  { name: "Horário Final", uid: "horario_final" },
   { name: "Clientes", uid: "clientes", sortable: true },
   { name: "Descrição da Atividade", uid: "atividade" },
-];
-
-export const statusOptions = [
-  { name: "Active", uid: "active" },
-  { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
 ];
 
 type Data = {
   id: any;
   data: any;
-  data_inicial: any;
-  data_final: any;
+  horario_inicial: any;
+  horario_final: any;
   clientes: any;
   atividade: any;
 }[];
 
 const data: Data = [];
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
-
-const INITIAL_VISIBLE_COLUMNS = ["data", "data_inicial", "data_final", "clientes", "atividade"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "data",
+  "horario_inicial",
+  "horario_final",
+  "clientes",
+  "atividade",
+];
 
 type User = any;
 
-export default function DataTable() {
-  const userStorage = localStorage.getItem("user");
-  const user = userStorage ? JSON.parse(userStorage) : null;
-  const username = user.username;
+export default function DataTableManager() {
   const [date, setDate] = useState([""]);
   const [start, setStart] = useState([""]);
   const [final, setFinal] = useState([""]);
@@ -192,72 +185,69 @@ export default function DataTable() {
   const [activity, setActivity] = useState([""]);
   const [tableData, setTableData] = useState<Data>([]);
 
-  
-  useEffect(() => {
+  const router = useRouter();
+
+  const username = localStorage.getItem("selectedEmployee");
+
+  if (username) {
     fetchSheets("GET", `${username}!A:A`, "").then((response) => {
       const data = response.data;
-      setDate(data.slice(-10));
+      setDate(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${username}!B:B`, "").then((response) => {
       const data = response.data;
-      setStart(data.slice(-10));
+      setStart(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${username}!C:C`, "").then((response) => {
       const data = response.data;
-      setFinal(data.slice(-10));
+      setFinal(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${username}!D:D`, "").then((response) => {
       const data = response.data;
-      setCustomers(data.slice(-10));
+      setCustomers(data.slice(-31).reverse());
     });
     fetchSheets("GET", `${username}!E:E`, "").then((response) => {
       const data = response.data;
-      setActivity(data.slice(-10));
+      setActivity(data.slice(-31).reverse());
     });
-
-  }, []);
+  }
 
   useEffect(() => {
-    const updatedData:any = start.map((_, index) => {
-      if (
-        date[index]?.[0] &&
-        start[index]?.[0] &&
-        final[index]?.[0] &&
-        customers[index]?.[0] &&
-        activity[index]?.[0]
-      ) {
-        return {
-          id: index,
-          data: date[index][0],
-          data_inicial: start[index][0],
-          data_final: final[index][0],
-          clientes: customers[index][0],
-          atividade: activity[index][0],
-        };
-      }
-      return null; // Ignora valores inválidos
-    }).filter(Boolean); // Remove valores nulos
-  
+    const updatedData: any = start
+      .map((_, index) => {
+        if (
+          date[index]?.[0] &&
+          start[index]?.[0] &&
+          final[index]?.[0] &&
+          customers[index]?.[0] &&
+          activity[index]?.[0]
+        ) {
+          return {
+            id: index,
+            data: date[index][0],
+            horario_inicial: start[index][0],
+            horario_final: final[index][0],
+            clientes: customers[index][0],
+            atividade: activity[index][0],
+          };
+        }
+        return null; // Ignora valores inválidos
+      })
+      .filter(Boolean); // Remove valores nulos
+
     setTableData(updatedData);
   }, [activity]);
-  
-
-
-
-
 
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
-    new Set([])
-  );
+
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "age",
-    direction: "ascending",
+    column: "data",
+    direction: "descending",
   });
 
   const [page, setPage] = React.useState(1);
@@ -273,23 +263,20 @@ export default function DataTable() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...tableData];
+    let filteredData = [...tableData];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user:any) =>
-        user.atividade.toLowerCase().includes(filterValue.toLowerCase())
+      filteredData = filteredData.filter((data: any) =>
+        data.clientes.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
-      filteredUsers = filteredUsers.filter((user:any) =>
+    if (statusFilter !== "all") {
+      filteredData = filteredData.filter((user: any) =>
         Array.from(statusFilter).includes(user.clientes)
       );
     }
 
-    return filteredUsers;
+    return filteredData;
   }, [tableData, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
@@ -301,10 +288,25 @@ export default function DataTable() {
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
 
+  const parseDate = (dateStr: string) => {
+    const [day, month, year] = dateStr.split("/");
+    return new Date(`${year}-${month}-${day}`);
+  };
+
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as number;
-      const second = b[sortDescriptor.column as keyof User] as number;
+      const column = sortDescriptor.column as keyof User;
+      let first: number | Date = a[column];
+      let second: number | Date = b[column];
+
+      if (column === "data") {
+        first = parseDate(a[column] as string);
+        second = parseDate(b[column] as string);
+      } else {
+        first = a[column] as number;
+        second = b[column] as number;
+      }
+
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
@@ -336,12 +338,7 @@ export default function DataTable() {
         );
       case "status":
         return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[user.status]}
-            size="sm"
-            variant="flat"
-          >
+          <Chip className="capitalize" size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -355,9 +352,8 @@ export default function DataTable() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem key="view">View</DropdownItem>
-                <DropdownItem key="edit">Edit</DropdownItem>
-                <DropdownItem key="delete">Delete</DropdownItem>
+                <DropdownItem key="edit">Editar</DropdownItem>
+                <DropdownItem key="delete">Deletar</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -408,7 +404,7 @@ export default function DataTable() {
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            placeholder="Procure pelo nome do cliente..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
@@ -421,31 +417,7 @@ export default function DataTable() {
                   endContent={<ChevronDownIcon className="text-small" />}
                   variant="flat"
                 >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  variant="flat"
-                >
-                  Columns
+                  Visualizar
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -463,24 +435,29 @@ export default function DataTable() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
+            <ActivitiesModalManual
+              btnLabel={
+                <>
+                  Adicionar novo
+                  <PlusIcon />
+                </>
+              }
+            />
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {tableData.length} users
+            Total de atividades: {tableData.length}
           </span>
           <label className="flex items-center text-default-400 text-small">
-            Rows per page:
+            Linhas por página:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
             >
-              <option value="5">5</option>
               <option value="10">10</option>
-              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
             </select>
           </label>
         </div>
@@ -499,11 +476,6 @@ export default function DataTable() {
   const bottomContent = React.useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-            ? "Todos items selecionados"
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
-        </span>
         <Pagination
           isCompact
           showControls
@@ -520,7 +492,7 @@ export default function DataTable() {
             variant="flat"
             onPress={onPreviousPage}
           >
-            Previous
+            Anterior
           </Button>
           <Button
             isDisabled={pages === 1}
@@ -528,12 +500,12 @@ export default function DataTable() {
             variant="flat"
             onPress={onNextPage}
           >
-            Next
+            Próximo
           </Button>
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [items.length, page, pages, hasSearchFilter]);
 
   return (
     <Table
@@ -544,12 +516,9 @@ export default function DataTable() {
       classNames={{
         wrapper: "max-h-[382px]",
       }}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
@@ -563,8 +532,8 @@ export default function DataTable() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
-        {(item:any) => (
+      <TableBody emptyContent={"Carregando..."} items={sortedItems}>
+        {(item: any) => (
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
