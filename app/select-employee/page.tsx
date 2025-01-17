@@ -35,23 +35,12 @@ export default function App() {
     if (selectedEmployee != ""){
       localStorage.setItem("selectedEmployee", selectedEmployee)
       router.push("/report")
-
     }
     return;
   })
   return (
-    <>
-      <div className="flex flex-wrap gap-3">
-        <Button
-          className="capitalize"
-          color="warning"
-          variant="flat"
-          onPress={onOpen}
-        >
-          Selecione
-        </Button>
-      </div>
-      <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
+    <div className="flex items-center">
+      <Modal backdrop="blur" isOpen={true}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -77,6 +66,6 @@ export default function App() {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }

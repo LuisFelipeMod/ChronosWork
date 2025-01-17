@@ -16,21 +16,7 @@ import { fetchSheets } from "@/components/fetch-sheets";
 import DataTableManager from "@/components/data-table-manager";
 
 export default function Report() {
-  const [isManager, setIsManager] = useState(false);
-
-  useEffect(() => {
-    const userStorage = localStorage.getItem("user");
-    const user = userStorage ? JSON.parse(userStorage) : null;
-    const username = user.username;
-
-    const getUserRole = async () => {
-      const response = await fetchSheets("GET", `DevsLogin!A:C`, "");
-      const userRole = response.data.find((item: any) => item[0] === username);
-      setIsManager(userRole[2] === "Sim");
-    };
-
-    getUserRole();
-  }, []);
+  const isManager = localStorage.getItem("isManager") === "Sim" ? true : false
 
   return (
     <ProtectedPage>

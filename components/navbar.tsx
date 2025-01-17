@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -16,6 +18,7 @@ import NextLink from "next/link";
 import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
+import { siteConfigManager } from "@/config/site-manager";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
   TwitterIcon,
@@ -25,6 +28,8 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
+
+const isManager = localStorage.getItem("isManager") === "Sim" ? true : false;
 
 export const Navbar = () => {
   const searchInput = (
@@ -52,18 +57,31 @@ export const Navbar = () => {
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  "data-[active=true]:text-primary data-[active=true]:font-medium text-secondaryLight"
-                )}
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
+          {isManager
+            ? siteConfigManager.navItems.map((item) => (
+                <NavbarItem key={item.href}>
+                  <NextLink
+                    className={clsx(
+                      "data-[active=true]:text-primary data-[active=true]:font-medium text-secondaryLight"
+                    )}
+                    href={item.href}
+                  >
+                    {item.label}
+                  </NextLink>
+                </NavbarItem>
+              ))
+            : siteConfig.navItems.map((item) => (
+                <NavbarItem key={item.href}>
+                  <NextLink
+                    className={clsx(
+                      "data-[active=true]:text-primary data-[active=true]:font-medium text-secondaryLight"
+                    )}
+                    href={item.href}
+                  >
+                    {item.label}
+                  </NextLink>
+                </NavbarItem>
+              ))}
         </ul>
       </NavbarContent>
 
@@ -94,10 +112,7 @@ export const Navbar = () => {
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                href="#"
-                size="lg"
-              >
+              <Link href="#" size="lg">
                 {item.label}
               </Link>
             </NavbarMenuItem>

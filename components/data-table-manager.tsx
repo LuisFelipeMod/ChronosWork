@@ -187,30 +187,32 @@ export default function DataTableManager() {
 
   const router = useRouter();
 
-  const username = localStorage.getItem("selectedEmployee");
+  useEffect(() => {
+    const username = localStorage.getItem("selectedEmployee");
 
-  if (username) {
-    fetchSheets("GET", `${username}!A:A`, "").then((response) => {
-      const data = response.data;
-      setDate(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${username}!B:B`, "").then((response) => {
-      const data = response.data;
-      setStart(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${username}!C:C`, "").then((response) => {
-      const data = response.data;
-      setFinal(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${username}!D:D`, "").then((response) => {
-      const data = response.data;
-      setCustomers(data.slice(-31).reverse());
-    });
-    fetchSheets("GET", `${username}!E:E`, "").then((response) => {
-      const data = response.data;
-      setActivity(data.slice(-31).reverse());
-    });
-  }
+    if (username) {
+      fetchSheets("GET", `${username}!A:A`, "").then((response) => {
+        const data = response.data;
+        setDate(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!B:B`, "").then((response) => {
+        const data = response.data;
+        setStart(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!C:C`, "").then((response) => {
+        const data = response.data;
+        setFinal(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!D:D`, "").then((response) => {
+        const data = response.data;
+        setCustomers(data.slice(-31).reverse());
+      });
+      fetchSheets("GET", `${username}!E:E`, "").then((response) => {
+        const data = response.data;
+        setActivity(data.slice(-31).reverse());
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const updatedData: any = start
@@ -475,35 +477,38 @@ export default function DataTableManager() {
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          page={page}
-          total={pages}
-          onChange={setPage}
-        />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onPreviousPage}
-          >
-            Anterior
-          </Button>
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onNextPage}
-          >
-            Próximo
-          </Button>
+      <>
+        <div className="py-2 px-2 flex justify-between items-center">
+          <Pagination
+            isCompact
+            showControls
+            showShadow
+            color="primary"
+            page={page}
+            total={pages}
+            onChange={setPage}
+          />
+          <div className="hidden sm:flex w-[30%] justify-end gap-2">
+            <Button
+              isDisabled={pages === 1}
+              size="sm"
+              variant="flat"
+              onPress={onPreviousPage}
+            >
+              Anterior
+            </Button>
+            <Button
+              isDisabled={pages === 1}
+              size="sm"
+              variant="flat"
+              onPress={onNextPage}
+            >
+              Próximo
+            </Button>
+          </div>
         </div>
-      </div>
+        <Button className="w-1/5">Criar relatório</Button>
+      </>
     );
   }, [items.length, page, pages, hasSearchFilter]);
 
