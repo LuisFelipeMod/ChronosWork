@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import { fetchSheets } from "./fetch-sheets";
 
-const selectedEmployee = localStorage.getItem("selectedEmployee");
-
 export function LayoutChart() {
   interface CellsItem {
     initial: string;
@@ -15,6 +13,8 @@ export function LayoutChart() {
   const [cells, setCells] = useState<CellsItem[] | []>([]);
 
   useEffect(() => {
+    const selectedEmployee = localStorage.getItem("selectedEmployee");
+
     fetchSheets("GET", `${selectedEmployee}!B:D`, "").then((response) => {
       const data = response.data;
 
