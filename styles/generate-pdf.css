@@ -1,0 +1,38 @@
+@media print {
+  * {
+    background: transparent;
+    color: #0d0d15;
+    text-shadow: none;
+    filter: none;
+    -ms-filter: none;
+  }
+  header,
+  header * {
+    display: none;
+    padding: 0;
+  }
+  .filter {
+    display: none;
+  }
+  .pdf-header{
+    padding-top: 0;
+  }
+  .pdf-box button, .pdf-box button *{
+    display: none;
+    font-size: 0;
+  }
+}
+
+text {
+  stroke: none;
+}
+
+.pdf-title{
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+hr{
+  margin-top: 0.5rem;
+  border-top-width: 4px;
+}
