@@ -28,10 +28,9 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
+import { useEffect, useState } from "react";
 
-const isManager = localStorage.getItem("isManager") === "Sim" ? true : false;
-
-export const Navbar = () => {
+export default function Navbar() {
   const searchInput = (
     <Input
       aria-label="Search"
@@ -52,6 +51,13 @@ export const Navbar = () => {
       type="search"
     />
   );
+  const [isManager, setIsManager] = useState(false);
+  
+  useEffect(() => {
+    const storageIsManager = localStorage.getItem("isManager") == "Sim"
+    
+    setIsManager(storageIsManager)
+  }, []);
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -121,4 +127,4 @@ export const Navbar = () => {
       </NavbarMenu>
     </NextUINavbar>
   );
-};
+}

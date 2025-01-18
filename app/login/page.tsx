@@ -38,6 +38,8 @@ export default function Login() {
           "isManager",
           userRole[2] === "Sim" ? "Sim" : "Não"
         );
+
+        localStorage.setItem("selectedEmployee", username);
       });
 
       router.push("/");
