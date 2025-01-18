@@ -2,8 +2,8 @@ import { Console } from "console";
 
 export async function fetchSheets(
   method: string,
-  range: string,
-  valueToSet: any
+  range: string, // Ex: Pagina1!A:A
+  valueToSet: any // Valor a ser inserido, caso o metodo for PUT
 ) {
   const res = await fetch("/api/sheets", {
     method: "POST",
