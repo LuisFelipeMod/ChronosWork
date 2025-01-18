@@ -25,7 +25,6 @@ import {
 import { fetchSheets } from "@/components/fetch-sheets";
 import { table } from "console";
 import ActivitiesModalManual from "@/components/activities-modal-manual";
-import { useRouter } from "next/navigation";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
@@ -177,7 +176,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 type User = any;
 
-export default function DataTableManager() {
+export default function DataTable() {
   const [date, setDate] = useState([""]);
   const [start, setStart] = useState([""]);
   const [final, setFinal] = useState([""]);
@@ -185,12 +184,13 @@ export default function DataTableManager() {
   const [activity, setActivity] = useState([""]);
   const [tableData, setTableData] = useState<Data>([]);
 
-  const router = useRouter();
-
   useEffect(() => {
-    const username = localStorage.getItem("selectedEmployee");
+    const userStorage = localStorage.getItem("user");
 
-    if (username) {
+    if (userStorage) {
+      const user = JSON.parse(userStorage);
+      const username = user.username;
+
       fetchSheets("GET", `${username}!A:A`, "").then((response) => {
         const data = response.data;
         setDate(data.slice(-31).reverse());
@@ -477,38 +477,35 @@ export default function DataTableManager() {
 
   const bottomContent = React.useMemo(() => {
     return (
-      <>
-        <div className="py-2 px-2 flex justify-between items-center">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="primary"
-            page={page}
-            total={pages}
-            onChange={setPage}
-          />
-          <div className="hidden sm:flex w-[30%] justify-end gap-2">
-            <Button
-              isDisabled={pages === 1}
-              size="sm"
-              variant="flat"
-              onPress={onPreviousPage}
-            >
-              Anterior
-            </Button>
-            <Button
-              isDisabled={pages === 1}
-              size="sm"
-              variant="flat"
-              onPress={onNextPage}
-            >
-              Próximo
-            </Button>
-          </div>
+      <div className="py-2 px-2 flex justify-between items-center">
+        <Pagination
+          isCompact
+          showControls
+          showShadow
+          color="primary"
+          page={page}
+          total={pages}
+          onChange={setPage}
+        />
+        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onPreviousPage}
+          >
+            Anterior
+          </Button>
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onNextPage}
+          >
+            Próximo
+          </Button>
         </div>
-        <Button className="w-1/5">Criar relatório</Button>
-      </>
+      </div>
     );
   }, [items.length, page, pages, hasSearchFilter]);
 

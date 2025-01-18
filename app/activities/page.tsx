@@ -1,3 +1,5 @@
+"use client";
+
 import { title, subtitle } from "@/components/primitives";
 import ActivitiesModal from "@/components/activities-modal";
 import ProtectedPage from "@/components/protected-page";
@@ -5,6 +7,7 @@ import ProtectedPage from "@/components/protected-page";
 import next from "next";
 
 export default async function Home() {
+
   return (
     <ProtectedPage>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
