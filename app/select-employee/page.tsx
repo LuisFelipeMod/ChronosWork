@@ -37,10 +37,11 @@ export default function App() {
       router.push("/report")
     }
     return;
-  })
+  }, [selectedEmployee]);
+  
   return (
     <div className="flex items-center">
-      <Modal backdrop="blur" isOpen={true}>
+      <Modal backdrop="blur" isOpen={true} placement="top-center">
         <ModalContent>
           {(onClose) => (
             <>

@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfigManager;
 
 export const siteConfigManager = {
   name: "ChronosWork",
-  description: "Tornando a experiência de registrar atividades mais agradável",
+  description: "Tornando a experiência de registrar atividades mais agradavel",
   navItems: [
     {
       label: "Atividades",
@@ -15,36 +15,12 @@ export const siteConfigManager = {
   ],
   navMenuItems: [
     {
-      label: "Profile",
-      href: "/profile",
+      label: "Atividades",
+      href: "/",
     },
     {
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      label: "Projects",
-      href: "/projects",
-    },
-    {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
+      label: "Relatório",
+      href: "/select-employee",
     },
   ]
 };

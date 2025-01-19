@@ -47,6 +47,10 @@ section[role="dialog"] button[aria-label="Close"]:hover{
   height: 20px;
 }
 
+.navbar-menu{
+  display: none;
+}
+
 @keyframes spinner{
   from {transform: rotate(0deg)}
   to {transform: rotate(360deg)}

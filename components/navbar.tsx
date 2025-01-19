@@ -27,8 +27,10 @@ import {
   HeartFilledIcon,
   SearchIcon,
   Logo,
+  LogoMobile,
 } from "@/components/icons";
 import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
 
 export default function Navbar() {
   const searchInput = (
@@ -52,16 +54,19 @@ export default function Navbar() {
     />
   );
   const [isManager, setIsManager] = useState(false);
-  
+
   useEffect(() => {
-    const storageIsManager = localStorage.getItem("isManager") == "Sim"
-    
-    setIsManager(storageIsManager)
+    const storageIsManager = localStorage.getItem("isManager") == "Sim";
+
+    setIsManager(storageIsManager);
   }, []);
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+      <NavbarContent justify="start" className="md:hidden">
+        <NavbarMenuToggle icon={<Menu/>} />
+      </NavbarContent>
+      <NavbarContent className="basis-1/5 sm:basis-full max-md:hidden" justify="start">
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
           {isManager
             ? siteConfigManager.navItems.map((item) => (
@@ -91,10 +96,39 @@ export default function Navbar() {
         </ul>
       </NavbarContent>
 
+      <NavbarMenu className="navbar-menu">
+        {isManager
+          ? siteConfigManager.navItems.map((item) => (
+              <NavbarMenuItem key={item.href}>
+                <NextLink
+                  className={clsx(
+                    "data-[active=true]:text-primary data-[active=true]:font-medium text-secondaryLight"
+                  )}
+                  href={item.href}
+                >
+                  {item.label}
+                </NextLink>
+              </NavbarMenuItem>
+            ))
+          : siteConfig.navItems.map((item) => (
+              <NavbarMenuItem key={item.href}>
+                <NextLink
+                  className={clsx(
+                    "data-[active=true]:text-primary data-[active=true]:font-medium text-secondaryLight"
+                  )}
+                  href={item.href}
+                >
+                  {item.label}
+                </NextLink>
+              </NavbarMenuItem>
+            ))}
+      </NavbarMenu>
+
       <NavbarContent justify="center">
         <NavbarBrand as="li" className="gap-3 max-w-fit flex items-center">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
+            <LogoMobile />
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
@@ -110,15 +144,14 @@ export default function Navbar() {
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
-        <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarMenu>
         {searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link href="#" size="lg">
+            <NavbarMenuItem key={`${item}-${index}`} className="bg-content1 rounded-md">
+              <Link href={item.href} size="lg" className="text-foreground w-full h-full p-2">
                 {item.label}
               </Link>
             </NavbarMenuItem>

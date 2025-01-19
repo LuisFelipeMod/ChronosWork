@@ -38,7 +38,7 @@ export default {
             background: "#1C1C1E",
             primary: "#2627D9",
             foreground: "#FFFFFF",
-            content1: "#1C1C1E",
+            content1: "#3f3f46",
             default: {
               100: "#3A3A3C",
             },
