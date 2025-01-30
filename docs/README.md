@@ -104,6 +104,8 @@ Lembrando que você mesmo pode realizar o teste no site hospedado: https://chron
 
 Para obter o acesso para o login, acesse a planilha e vá até a aba "DevsLogin".
 
+![Clique aqui pra acessar a planilha](https://docs.google.com/spreadsheets/d/13rBpIoIKqcoNdXkT16BmzSK11WaKQfQIcmEmDOZmaPA/edit?gid=569383495#gid=569383495)
+
 # Rodar local:
 
 ## Pré-requisitos
